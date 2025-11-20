@@ -1,4 +1,4 @@
-# Connectify 🌐 Live Link: https://connectify-nine-zeta.vercel.app/
+# Connectify 
 
 Connectify is a fullstack, real-time communication platform that enables seamless messaging and video calling. With a modern tech stack and scalable architecture, it supports secure, responsive, and customizable user experiences for both individual and group interactions.
 
