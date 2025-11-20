@@ -59,6 +59,7 @@
 // export default chatSlice.reducer;
 
 
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -66,6 +67,7 @@ const initialState = {
   user: null,
   notification: [],
   chats: [],
+  onlineUsers: [], // <-- Added
 };
 
 const chatSlice = createSlice({
@@ -92,11 +94,18 @@ const chatSlice = createSlice({
     setChats: (state, action) => {
       state.chats = action.payload;
     },
+
+    // 🔥 New reducer for managing online users
+    setOnlineUsers: (state, action) => {
+      state.onlineUsers = action.payload;
+    },
+
     logout: (state) => {
       state.user = null;
       state.selectedChat = null;
       state.chats = [];
       state.notification = [];
+      state.onlineUsers = []; // clear online info
     },
   },
 });
@@ -108,6 +117,7 @@ export const {
   addNotification,
   removeNotification,
   setChats,
+  setOnlineUsers, // <-- Export added action
   logout,
 } = chatSlice.actions;
 

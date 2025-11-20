@@ -7,19 +7,19 @@ import { axiosInstance } from "../lib/axios";
 
 const FriendCard = ({ friend }) => {
   const dispatch = useDispatch();
-  const { user, selectedChat, chats, notification } = useSelector(
-    (state) => state.user
-  );
+  const { chats, onlineUsers } = useSelector((state) => state.user);
+
+  // ✔ Check if current friend is online
+  const isOnline = onlineUsers?.includes(friend._id);
 
   const accessChat = async (userId) => {
-    console.log(userId);
-
     try {
       const { data } = await axiosInstance.post(`/chat`, { userId });
 
       if (!chats.find((c) => c._id === data._id)) {
         dispatch(setChats([data, ...chats]));
       }
+
       dispatch(setSelectedChat(data));
     } catch (error) {
       console.log(error.message);
@@ -29,12 +29,25 @@ const FriendCard = ({ friend }) => {
   return (
     <div className="card bg-base-200 hover:shadow-md transition-shadow">
       <div className="card-body p-4">
+        
         {/* USER INFO */}
         <div className="flex items-center gap-3 mb-3">
+
+          {/* Avatar */}
           <div className="avatar size-12">
             <img src={friend.profilePic} alt={friend.fullName} />
           </div>
-          <h3 className="font-semibold truncate">{friend.fullName}</h3>
+
+          <div className="flex-1">
+            <h3 className="font-semibold truncate">{friend.fullName}</h3>
+            
+            {/* Online Status Badge Below Name */}
+            {isOnline && (
+              <span className="inline-flex items-center justify-center bg-green-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-full mt-1">
+                Online
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-1.5 mb-3">
@@ -42,32 +55,24 @@ const FriendCard = ({ friend }) => {
             {getLanguageFlag(friend.nativeLanguage)}
             Native: {friend.nativeLanguage}
           </span>
-          {/* <span className="badge badge-outline text-xs">
-            {getLanguageFlag(friend.learningLanguage)}
-            Learning: {friend.learningLanguage}
-          </span> */}
         </div>
 
-        {/* <Link to={`/chat/${friend._id}`} className="btn btn-outline w-full">
-          Message
-        </Link> */}
         <Link to={"/chatbox"}>
-        <button
-          className="btn btn-outline w-full"
-          onClick={() => {
-            console.log("Button clicked!");
-            console.log("Friend ID:", friend._id);
-            accessChat(friend._id);
-          }}
-        >
-          Start Chat
-        </button>
+          <button
+            className="btn btn-outline w-full"
+            onClick={() => accessChat(friend._id)}
+          >
+            Start Chat
+          </button>
         </Link>
+
       </div>
     </div>
   );
 };
+
 export default FriendCard;
+
 
 export function getLanguageFlag(language) {
   if (!language) return null;

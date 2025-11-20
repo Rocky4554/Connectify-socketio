@@ -101,6 +101,15 @@ const LoginPage = () => {
                     )}
                   </button>
 
+                    <button
+                    type="submit"
+                    className="btn btn-secondary w-full"
+                    onClick={() => setLoginData({ email: "batmandark@gmail.com", password: "darknight45" })}
+                    disabled={isPending}
+                  >
+                    Login as Guest
+                  </button>
+
                   <div className="text-center mt-4">
                     <p className="text-sm">
                       Don't have an account?{" "}

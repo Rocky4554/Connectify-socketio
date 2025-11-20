@@ -7,6 +7,14 @@ import Layout from "./components/Layout.jsx";
 import UserProvider from "./components/UserProvider.jsx";
 import { useSelector } from "react-redux";
 import { selectTheme } from "./store/themeSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import io from "socket.io-client";
+import { setOnlineUsers } from "./store/userSlice";
+
+const socket = io(import.meta.env.VITE_API_URL, {
+  withCredentials: true,
+});
 
 // Lazy load page components
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
@@ -22,6 +30,25 @@ const ChatBox = lazy(()=>import("./pages/Chatbox.jsx"));
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
   const theme = useSelector(selectTheme);
+   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!authUser) return;
+
+    // Emit that user is online
+    socket.emit("user-connected", authUser._id);
+
+    // Listen for online users list update from server
+    socket.on("get-online-users", (users) => {
+      dispatch(setOnlineUsers(users));
+    });
+
+    // Disconnect handler when user leaves
+    return () => {
+      socket.emit("user-disconnected", authUser._id);
+      socket.off("get-online-users");
+    };
+  }, [authUser, dispatch]);
 
   const isAuthenticated = Boolean(authUser);
   const isOnboarded = authUser?.isOnboarded;

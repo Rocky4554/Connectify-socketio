@@ -37,8 +37,9 @@ function Chatbox({ fetchAgain, setFetchAgain }) {
       alignItems="center"
       flexDirection="column"
       p={3}
-      bg="white"
-      w={{ base: "100%", md: "68%" }}
+      bg="#1D232A"
+      w={{ base: "100%",md: "100%" }}
+      h={"100%"}
       borderRadius="lg"
       borderWidth="1px"
       boxShadow="md"
